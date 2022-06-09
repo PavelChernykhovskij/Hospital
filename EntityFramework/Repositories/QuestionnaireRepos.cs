@@ -33,6 +33,7 @@ namespace Hospital.EntityFramework.Repositories
             using var context = _factory.CreateContext();
             var data = context.Questionnairies
                     .Include(q => q.Questions)
+                    .Include(d => d.Doctor)
                     .ToList();
             return data;
         }

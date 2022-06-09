@@ -13,13 +13,15 @@ namespace Hospital.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IRepos<Question> _repository;
-
+        private readonly IRepos<Doctor> _repository2;
         public QuestionController(
             IMapper mapper,
-            IRepos<Question> repository)
+            IRepos<Question> repository,
+            IRepos<Doctor> repository2)
         {
             _mapper = mapper;
             _repository = repository;
+            _repository2 = repository2;
         }
 
         [HttpGet]
@@ -33,7 +35,10 @@ namespace Hospital.Controllers
         [HttpPost]
         public ActionResult Create(QuestionDto dto)
         {
+            var dtos = _repository2.Read().FirstOrDefault(q => dto.QuestionnaireId == q.Id);
+            _repository2.Update(dtos);
             var data = _mapper.Map<Question>(dto);
+            data.QuestionnaireId = dtos.Id;
             _repository.Create(data);
             return Json(dto);
         }
